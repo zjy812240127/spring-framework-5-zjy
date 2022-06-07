@@ -45,6 +45,9 @@ class PropertyPlaceholderBeanDefinitionParser extends AbstractPropertyLoadingBea
 		// 'FALLBACK' to 'ENVIRONMENT'. This latter value indicates that resolution of
 		// placeholders against system properties is a function of the Environment and
 		// its current set of PropertySources.
+		/** 每一个标签有多个属性 id name class等，这些属性都放到一个类中<bean id="DB2" name="Db2" class="org.springframework.jdbc.support.SQLErrorCodes">
+		 * 	获取这个对应的类
+		 * */
 		if (SYSTEM_PROPERTIES_MODE_DEFAULT.equals(element.getAttribute(SYSTEM_PROPERTIES_MODE_ATTRIBUTE))) {
 			return PropertySourcesPlaceholderConfigurer.class;
 		}
@@ -56,8 +59,10 @@ class PropertyPlaceholderBeanDefinitionParser extends AbstractPropertyLoadingBea
 
 	@Override
 	protected void doParse(Element element, ParserContext parserContext, BeanDefinitionBuilder builder) {
+		// 父类通用标签属性解析
 		super.doParse(element, parserContext, builder);
 
+		/** 子类自定义的某些标签的解析。留给我们进行扩展  */
 		builder.addPropertyValue("ignoreUnresolvablePlaceholders",
 				Boolean.valueOf(element.getAttribute("ignore-unresolvable")));
 

@@ -1379,15 +1379,31 @@ public class BeanDefinitionParserDelegate {
 	 */
 	@Nullable
 	public BeanDefinition parseCustomElement(Element ele, @Nullable BeanDefinition containingBd) {
+		/**
+		 * xml自定义标签解析过程：
+		 *
+		 * BeanDefinitionParserDelegate中
+		 *
+		 * 1）parseCustomElement方法获取xml文件中的命名空间，自定义的命名空间指向我们对应标签的xsd文件路径（也就是schemas文件中的key，解析schemas文件得到对应的value路径，也就是我们本地存放的自定义标签的xsd文件）
+		 *
+		 * 2）读取到我们本地的xsd文件后，解析handlers文件，根据key获取对应和标签的handler解析器类的包路径
+		 *
+		 * 3）得到自定义标签的解析器类
+		 *
+		 * 4）调用解析器类的init方法，以自定义标签为key，获取对应的value就是解析自定义标签对应的一个具体类以及每个标签属性对应的该类的属性和方法
+		 */
+		// 获取对应的命名空间
 		String namespaceUri = getNamespaceURI(ele);
 		if (namespaceUri == null) {
 			return null;
 		}
+		// 根据当前元素的标签找到该标签所在的命名空间，然后获取对应的NameSpaceHandler类对象进行解析该标签代表的bean
 		NamespaceHandler handler = this.readerContext.getNamespaceHandlerResolver().resolve(namespaceUri);
 		if (handler == null) {
 			error("Unable to locate Spring NamespaceHandler for XML schema namespace [" + namespaceUri + "]", ele);
 			return null;
 		}
+		// 调用自定义的NameSpaceHandler进行解析
 		return handler.parse(ele, new ParserContext(this.readerContext, this, containingBd));
 	}
 

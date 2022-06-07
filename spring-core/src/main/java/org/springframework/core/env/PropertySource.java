@@ -205,7 +205,7 @@ public abstract class PropertySource<T> {
 	 */
 	public static class StubPropertySource extends PropertySource<Object> {
 
-		public StubPropertySource(String name) {
+		public StubPropertySource(String name, Object o) {
 			super(name, new Object());
 		}
 
@@ -232,7 +232,7 @@ public abstract class PropertySource<T> {
 				"ComparisonPropertySource instances are for use with collection comparison only";
 
 		public ComparisonPropertySource(String name) {
-			super(name);
+			super(name, new Object());
 		}
 
 		@Override

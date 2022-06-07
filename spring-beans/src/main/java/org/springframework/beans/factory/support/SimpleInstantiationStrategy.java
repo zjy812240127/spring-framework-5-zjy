@@ -60,6 +60,7 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 	@Override
 	public Object instantiate(RootBeanDefinition bd, @Nullable String beanName, BeanFactory owner) {
 		// Don't override the class with CGLIB if no overrides.
+		/**  该bean没有方法被重写，直接生成nbean对象   */
 		if (!bd.hasMethodOverrides()) {
 			Constructor<?> constructorToUse;
 			synchronized (bd.constructorArgumentLock) {
@@ -88,6 +89,7 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 		}
 		else {
 			// Must generate CGLIB subclass.
+			/** 有方法被重写就需要用CGLIB生成代理对象 */
 			return instantiateWithMethodInjection(bd, beanName, owner);
 		}
 	}
@@ -106,6 +108,7 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 	public Object instantiate(RootBeanDefinition bd, @Nullable String beanName, BeanFactory owner,
 			final Constructor<?> ctor, Object... args) {
 
+		/**  判断是否有对bean的方法进行重写，有的话需要使用CGLIB生成动态代理类  */
 		if (!bd.hasMethodOverrides()) {
 			if (System.getSecurityManager() != null) {
 				// use own privileged to change accessibility (when security is on)
@@ -114,6 +117,7 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 					return null;
 				});
 			}
+			/** 反射获取实例化对象  */
 			return BeanUtils.instantiateClass(ctor, args);
 		}
 		else {

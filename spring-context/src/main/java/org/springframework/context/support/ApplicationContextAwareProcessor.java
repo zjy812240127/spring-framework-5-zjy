@@ -99,6 +99,10 @@ class ApplicationContextAwareProcessor implements BeanPostProcessor {
 		return bean;
 	}
 
+	/**
+	 * 前面初始化bean工厂时忽略的这几个接口，会在这里进行一一判断并设置
+	 * @param bean
+	 */
 	private void invokeAwareInterfaces(Object bean) {
 		if (bean instanceof Aware) {
 			if (bean instanceof EnvironmentAware) {
@@ -126,5 +130,7 @@ class ApplicationContextAwareProcessor implements BeanPostProcessor {
 	public Object postProcessAfterInitialization(Object bean, String beanName) {
 		return bean;
 	}
+
+
 
 }

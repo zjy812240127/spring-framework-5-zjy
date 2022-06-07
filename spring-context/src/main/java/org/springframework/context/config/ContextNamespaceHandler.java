@@ -32,6 +32,7 @@ public class ContextNamespaceHandler extends NamespaceHandlerSupport {
 
 	@Override
 	public void init() {
+		// 获取对应标签的解析处理类
 		registerBeanDefinitionParser("property-placeholder", new PropertyPlaceholderBeanDefinitionParser());
 		registerBeanDefinitionParser("property-override", new PropertyOverrideBeanDefinitionParser());
 		registerBeanDefinitionParser("annotation-config", new AnnotationConfigBeanDefinitionParser());

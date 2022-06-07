@@ -174,6 +174,7 @@ class ConstructorResolver {
 			}
 
 			// Need to resolve the constructor.
+			/** 需要解析构造器方法，然后 调用构造器方法 反射获取bean对象  */
 			boolean autowiring = (chosenCtors != null ||
 					mbd.getResolvedAutowireMode() == AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR);
 			ConstructorArgumentValues resolvedValues = null;
@@ -289,6 +290,7 @@ class ConstructorResolver {
 	private Object instantiate(
 			String beanName, RootBeanDefinition mbd, Constructor<?> constructorToUse, Object[] argsToUse) {
 
+		/** 反射根据构造器方法生成实例化对象  */
 		try {
 			InstantiationStrategy strategy = this.beanFactory.getInstantiationStrategy();
 			if (System.getSecurityManager() != null) {

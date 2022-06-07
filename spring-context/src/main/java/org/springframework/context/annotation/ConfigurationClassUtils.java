@@ -111,10 +111,11 @@ abstract class ConfigurationClassUtils {
 				return false;
 			}
 		}
-
+		/** full标识当前类被@Configuration注释，将该属性加入到bean定义信息里面 */
 		if (isFullConfigurationCandidate(metadata)) {
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_FULL);
 		}
+		/** lite标识当前类被非@Configuration注释，将该属性加入到bean定义信息里面 */
 		else if (isLiteConfigurationCandidate(metadata)) {
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_LITE);
 		}
@@ -168,6 +169,13 @@ abstract class ConfigurationClassUtils {
 		}
 
 		// Any of the typical annotations found?
+		/** 判断是否是
+		 * Component
+		 * ComponentScan
+		 * Import
+		 * ImportResource
+		 * 里的注解
+		 * */
 		for (String indicator : candidateIndicators) {
 			if (metadata.isAnnotated(indicator)) {
 				return true;
@@ -176,6 +184,7 @@ abstract class ConfigurationClassUtils {
 
 		// Finally, let's look for @Bean methods...
 		try {
+			/** 判断是否是@Bean注解  */
 			return metadata.hasAnnotatedMethods(Bean.class.getName());
 		}
 		catch (Throwable ex) {

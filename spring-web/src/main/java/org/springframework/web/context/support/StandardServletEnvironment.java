@@ -82,8 +82,8 @@ public class StandardServletEnvironment extends StandardEnvironment implements C
 	 */
 	@Override
 	protected void customizePropertySources(MutablePropertySources propertySources) {
-		propertySources.addLast(new StubPropertySource(SERVLET_CONFIG_PROPERTY_SOURCE_NAME));
-		propertySources.addLast(new StubPropertySource(SERVLET_CONTEXT_PROPERTY_SOURCE_NAME));
+		propertySources.addLast(new StubPropertySource(SERVLET_CONFIG_PROPERTY_SOURCE_NAME, new Object()));
+		propertySources.addLast(new StubPropertySource(SERVLET_CONTEXT_PROPERTY_SOURCE_NAME, new Object()));
 		if (JndiLocatorDelegate.isDefaultJndiEnvironmentAvailable()) {
 			propertySources.addLast(new JndiPropertySource(JNDI_PROPERTY_SOURCE_NAME));
 		}

@@ -174,12 +174,15 @@ public class InjectionMetadata {
 		protected void inject(Object target, @Nullable String requestingBeanName, @Nullable PropertyValues pvs)
 				throws Throwable {
 
+			/** inject注入被自动注入的对象的属性或者方法  */
 			if (this.isField) {
+				/** 自动注入属性  */
 				Field field = (Field) this.member;
 				ReflectionUtils.makeAccessible(field);
 				field.set(target, getResourceToInject(target, requestingBeanName));
 			}
 			else {
+				/** 自动注入方法  */
 				if (checkPropertySkipping(pvs)) {
 					return;
 				}

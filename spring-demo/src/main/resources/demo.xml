@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:aop="http://www.springframework.org/schema/aop"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:hik="http://www.hikvision.com/schema/user"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.hikvision.com/schema/user http://www.hikvision.com/schema/user.xsd">
+
+<hik:user id="person" name="person" address="hikvision"></hik:user>
+	<context:component-scan base-package="com.zjut"></context:component-scan>
+	<context:annotation-config></context:annotation-config>
+
+	<bean id="a" class="com.zjut.circleRefrence.A">
+		<property name="b" ref="b"></property>
+	</bean>
+
+	<bean id="b" class="com.zjut.circleRefrence.B">
+		<property name="a" ref="a"></property>
+ 	</bean>
+
+<!--	<bean id="person" name="person" class="com.zjut.Person">-->
+<!--		<property name="name" value="xxx"/>-->
+<!--		<property name="address" value="qqqq"/>-->
+<!--	</bean>-->
+<!--	<bean class="com.zjut.myConversionBean.MyPropertyEditorSupport"></bean>-->
+<!--	实现自定义的内嵌类属性解析-->
+	<bean id="myCustomizedPropertyEditorRegistrar" class="com.zjut.myConversionBean.MyCustomizedPropertyEditorRegistrar"></bean>
+	<bean class="org.springframework.beans.factory.config.CustomEditorConfigurer">
+		<property name="propertyEditorRegistrars">
+			<list>
+				<ref bean="myCustomizedPropertyEditorRegistrar"/>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="myApplicationListener" class="com.zjut.listenner.MyApplicationListener"></bean>
+	<bean id="myApplicationEventMulticaster" class="com.zjut.listenner.MyApplicationEventMulticaster"></bean>
+	<bean id="personNamespaceHandler" class="com.zjut.PersonNamespaceHandler"></bean>
+	<bean id="personPlaceholderBeanDefinitionParser" class="com.zjut.PersonPlaceholderBeanDefinitionParser"></bean>
+	<bean id="reader" class="com.zjut.MyBeanDefinitionDocumentReader" ></bean>
+	<bean id="myConversionBean" class="com.zjut.myConversionBean.MyConversionBean">
+		<property name="innerBean" value="zhangsan_address"></property>
+		<property name="name" value="lisi"></property>
+	</bean>
+<!--	<bean id="myTest" class="com.zjut.TestRegisterResolvableDependency"></bean>-->
+<!--	<bean id="testA" class="com.zjut.MyTestBeanA"></bean>-->
+<!--	<bean id="testB" class="com.zjut.MyTestBeanB"></bean>-->
+	<bean id="myBeanPostProcessor" class="com.zjut.mybdrpp.MyBeanPostProcessor"></bean>
+<!--	<bean id="myApplicationListener" class="com.zjut.listenner.MyApplicationListener"></bean>-->
+<!--	<bean id="myConversionBean" class="com.zjut.MyConversionBean">-->
+<!--		<property name="beanName" value="xxx"></property>-->
+<!--		<property name="person" value="zhangsan_hangzhou"></property>-->
+<!--	</bean>-->
+	<bean id="myStubPropertySource" class="com.zjut.MyStubPropertySource">
+		<constructor-arg value="testSub"/>
+	</bean>
+<!--	<bean id="myApplicationEventMulticaster" class="com.zjut.listenner.MyApplicationEventMulticaster"></bean>-->
+</beans>
+
+

@@ -319,6 +319,7 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 	public PropertyValues postProcessProperties(PropertyValues pvs, Object bean, String beanName) {
 		InjectionMetadata metadata = findResourceMetadata(beanName, bean.getClass(), pvs);
 		try {
+			/**  反射将属性值注入类的元数据中  */
 			metadata.inject(bean, beanName, pvs);
 		}
 		catch (Throwable ex) {

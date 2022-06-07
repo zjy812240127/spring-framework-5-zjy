@@ -82,6 +82,7 @@ public class CglibSubclassingInstantiationStrategy extends SimpleInstantiationSt
 			@Nullable Constructor<?> ctor, Object... args) {
 
 		// Must generate CGLIB subclass...
+		/** 通过CGLib生成动态代理的bean对象  */
 		return new CglibSubclassCreator(bd, owner).instantiate(ctor, args);
 	}
 
@@ -114,9 +115,11 @@ public class CglibSubclassingInstantiationStrategy extends SimpleInstantiationSt
 		 * @return new instance of the dynamically generated subclass
 		 */
 		public Object instantiate(@Nullable Constructor<?> ctor, Object... args) {
+			/** CGLib通过enhancer返回增强的代理 Class类  */
 			Class<?> subclass = createEnhancedSubclass(this.beanDefinition);
 			Object instance;
 			if (ctor == null) {
+				/** 实例化该代理 Class类  */
 				instance = BeanUtils.instantiateClass(subclass);
 			}
 			else {
@@ -131,6 +134,8 @@ public class CglibSubclassingInstantiationStrategy extends SimpleInstantiationSt
 			}
 			// SPR-10785: set callbacks directly on the instance instead of in the
 			// enhanced class (via the Enhancer) in order to avoid memory leaks.
+			/** lookupMethod主要解决单例依赖原型，每次都引用一个新的bean对象，
+			 *  repalaceMethod  动态代理对象可以实现对元对象的方法的重写 */
 			Factory factory = (Factory) instance;
 			factory.setCallbacks(new Callback[] {NoOp.INSTANCE,
 					new LookupOverrideMethodInterceptor(this.beanDefinition, this.owner),

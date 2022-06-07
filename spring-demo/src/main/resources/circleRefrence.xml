@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:hik="http://www.hikvision.com/schema/user"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.hikvision.com/schema/user http://www.hikvision.com/schema/user.xsd">
+
+	<context:component-scan base-package="com.zjut"></context:component-scan>
+	<context:annotation-config></context:annotation-config>
+	<bean id="a" class="com.zjut.circleRefrence.A">
+
+	</bean>
+
+	<bean id="b" class="com.zjut.circleRefrence.B"></bean>
+
+<!--	<hik:user id="person" name="person" address="hikvision"></hik:user>-->
+<!--	<context:component-scan base-package="com.zjut"></context:component-scan>-->
+<!--	<context:annotation-config></context:annotation-config>-->
+
+<!--	&lt;!&ndash;	<bean id="person" name="person" class="com.zjut.Person">&ndash;&gt;-->
+<!--	&lt;!&ndash;		<property name="name" value="xxx"/>&ndash;&gt;-->
+<!--	&lt;!&ndash;		<property name="address" value="qqqq"/>&ndash;&gt;-->
+<!--	&lt;!&ndash;	</bean>&ndash;&gt;-->
+<!--	&lt;!&ndash;	<bean class="com.zjut.myConversionBean.MyPropertyEditorSupport"></bean>&ndash;&gt;-->
+<!--	&lt;!&ndash;	实现自定义的内嵌类属性解析&ndash;&gt;-->
+<!--	<bean id="myCustomizedPropertyEditorRegistrar" class="com.zjut.myConversionBean.MyCustomizedPropertyEditorRegistrar"></bean>-->
+<!--	<bean class="org.springframework.beans.factory.config.CustomEditorConfigurer">-->
+<!--		<property name="propertyEditorRegistrars">-->
+<!--			<list>-->
+<!--				<ref bean="myCustomizedPropertyEditorRegistrar"/>-->
+<!--			</list>-->
+<!--		</property>-->
+<!--	</bean>-->
+
+<!--	<bean id="myApplicationListener" class="com.zjut.listenner.MyApplicationListener"></bean>-->
+<!--	<bean id="myApplicationEventMulticaster" class="com.zjut.listenner.MyApplicationEventMulticaster"></bean>-->
+<!--	<bean id="personNamespaceHandler" class="com.zjut.PersonNamespaceHandler"></bean>-->
+<!--	<bean id="personPlaceholderBeanDefinitionParser" class="com.zjut.PersonPlaceholderBeanDefinitionParser"></bean>-->
+<!--	<bean id="reader" class="com.zjut.MyBeanDefinitionDocumentReader" ></bean>-->
+<!--	<bean id="myConversionBean" class="com.zjut.myConversionBean.MyConversionBean">-->
+<!--		<property name="innerBean" value="zhangsan_address"></property>-->
+<!--		<property name="name" value="lisi"></property>-->
+<!--	</bean>-->
+<!--	&lt;!&ndash;	<bean id="myTest" class="com.zjut.TestRegisterResolvableDependency"></bean>&ndash;&gt;-->
+<!--	&lt;!&ndash;	<bean id="testA" class="com.zjut.MyTestBeanA"></bean>&ndash;&gt;-->
+<!--	&lt;!&ndash;	<bean id="testB" class="com.zjut.MyTestBeanB"></bean>&ndash;&gt;-->
+<!--	<bean id="myBeanPostProcessor" class="com.zjut.mybdrpp.MyBeanPostProcessor"></bean>-->
+<!--	&lt;!&ndash;	<bean id="myApplicationListener" class="com.zjut.listenner.MyApplicationListener"></bean>&ndash;&gt;-->
+<!--	&lt;!&ndash;	<bean id="myConversionBean" class="com.zjut.MyConversionBean">&ndash;&gt;-->
+<!--	&lt;!&ndash;		<property name="beanName" value="xxx"></property>&ndash;&gt;-->
+<!--	&lt;!&ndash;		<property name="person" value="zhangsan_hangzhou"></property>&ndash;&gt;-->
+<!--	&lt;!&ndash;	</bean>&ndash;&gt;-->
+<!--	<bean id="myStubPropertySource" class="com.zjut.MyStubPropertySource">-->
+<!--		<constructor-arg value="testSub"/>-->
+<!--	</bean>-->
+	<!--	<bean id="myApplicationEventMulticaster" class="com.zjut.listenner.MyApplicationEventMulticaster"></bean>-->
+</beans>
+
+

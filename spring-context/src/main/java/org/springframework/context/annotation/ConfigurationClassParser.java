@@ -216,10 +216,12 @@ class ConfigurationClassParser {
 
 
 	protected void processConfigurationClass(ConfigurationClass configClass) throws IOException {
+		/*** 判断是否跳过解析，类上被@Conditional注解，按条件判断是否跳过 */
 		if (this.conditionEvaluator.shouldSkip(configClass.getMetadata(), ConfigurationPhase.PARSE_CONFIGURATION)) {
 			return;
 		}
 
+		/** 判断是否已经被解析，防止重复解析  */
 		ConfigurationClass existingClass = this.configurationClasses.get(configClass);
 		if (existingClass != null) {
 			if (configClass.isImported()) {
@@ -238,8 +240,10 @@ class ConfigurationClassParser {
 		}
 
 		// Recursively process the configuration class and its superclass hierarchy.
+		/** 判断该类的父类是否为空，不为空则循环解析其父类 */
 		SourceClass sourceClass = asSourceClass(configClass);
 		do {
+			/** 进行解析 */
 			sourceClass = doProcessConfigurationClass(configClass, sourceClass);
 		}
 		while (sourceClass != null);
@@ -261,10 +265,12 @@ class ConfigurationClassParser {
 
 		if (configClass.getMetadata().isAnnotated(Component.class.getName())) {
 			// Recursively process any member (nested) classes first
+			/** 该类的一个属性是内部类，内部类如果包含注解，则也要进行注解解析 */
 			processMemberClasses(configClass, sourceClass);
 		}
 
 		// Process any @PropertySource annotations
+		/** 该注解提供@Vlaue里面变量取值的文件地址。比如apollo配置文件地址等，加载外部文件到上下文，等后面实例化对象时会将具体变量值加入到对象的属性中 */
 		for (AnnotationAttributes propertySource : AnnotationConfigUtils.attributesForRepeatable(
 				sourceClass.getMetadata(), PropertySources.class,
 				org.springframework.context.annotation.PropertySource.class)) {
@@ -293,6 +299,7 @@ class ConfigurationClassParser {
 						bdCand = holder.getBeanDefinition();
 					}
 					if (ConfigurationClassUtils.checkConfigurationClassCandidate(bdCand, this.metadataReaderFactory)) {
+						/** 递归调用方法解析 */
 						parse(bdCand.getBeanClassName(), holder.getBeanName());
 					}
 				}
@@ -300,6 +307,7 @@ class ConfigurationClassParser {
 		}
 
 		// Process any @Import annotations
+		/** springboot自动装配解析的就是import注解  */
 		processImports(configClass, sourceClass, getImports(sourceClass), true);
 
 		// Process any @ImportResource annotations
@@ -352,6 +360,7 @@ class ConfigurationClassParser {
 				}
 			}
 			OrderComparator.sort(candidates);
+			/** 循环递归解析其内部注解类  */
 			for (SourceClass candidate : candidates) {
 				if (this.importStack.contains(configClass)) {
 					this.problemReporter.error(new CircularImportProblem(configClass, this.importStack));
@@ -359,6 +368,7 @@ class ConfigurationClassParser {
 				else {
 					this.importStack.push(configClass);
 					try {
+						/** 递归处理内部类的注解解析 */
 						processConfigurationClass(candidate.asConfigClass(configClass));
 					}
 					finally {
@@ -566,6 +576,7 @@ class ConfigurationClassParser {
 						else {
 							String[] importClassNames = selector.selectImports(currentSourceClass.getMetadata());
 							Collection<SourceClass> importSourceClasses = asSourceClasses(importClassNames);
+							/** 递归调用，该注解类里面可能也包含其他注解信息 */
 							processImports(configClass, currentSourceClass, importSourceClasses, false);
 						}
 					}

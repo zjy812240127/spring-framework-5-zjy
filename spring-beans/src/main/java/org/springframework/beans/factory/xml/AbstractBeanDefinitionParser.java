@@ -60,6 +60,7 @@ public abstract class AbstractBeanDefinitionParser implements BeanDefinitionPars
 	@Override
 	@Nullable
 	public final BeanDefinition parse(Element element, ParserContext parserContext) {
+		/** 解析外部标签的所有属性id name class等，封装到一个类里面<bean id="DB2" name="Db2" class="org.springframework.jdbc.support.SQLErrorCodes"> */
 		AbstractBeanDefinition definition = parseInternal(element, parserContext);
 		if (definition != null && !parserContext.isNested()) {
 			try {
@@ -77,9 +78,11 @@ public abstract class AbstractBeanDefinitionParser implements BeanDefinitionPars
 					}
 				}
 				BeanDefinitionHolder holder = new BeanDefinitionHolder(definition, id, aliases);
+				/** 任何 registru 都是用来进行对应元素的 增删改查 操作， 此处将解析好的bean加入beanDefinitionMaps和beanDefinitionNames里面 */
 				registerBeanDefinition(holder, parserContext.getRegistry());
 				if (shouldFireEvents()) {
 					BeanComponentDefinition componentDefinition = new BeanComponentDefinition(holder);
+					/** 可扩展：子类继承重写方法，实现解析完bean定义后要执行的操作。。。。。。  */
 					postProcessComponentDefinition(componentDefinition);
 					parserContext.registerComponent(componentDefinition);
 				}

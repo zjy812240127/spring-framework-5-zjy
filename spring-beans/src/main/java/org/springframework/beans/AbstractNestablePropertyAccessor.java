@@ -458,6 +458,7 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 				}
 				pv.getOriginalPropertyValue().conversionNecessary = (valueToApply != originalValue);
 			}
+			/** 调用对象的set方法将属性值赋值进去，循环依赖时也是从这里将依赖的未初始化的实例对象注入属性  */
 			ph.setValue(valueToApply);
 		}
 		catch (TypeMismatchException ex) {

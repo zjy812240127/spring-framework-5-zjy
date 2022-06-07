@@ -89,6 +89,7 @@ public class DefaultDocumentLoader implements DocumentLoader {
 			throws ParserConfigurationException {
 
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		/** 预先设置命名空间解析感知为false，因为下面如果没有进入if语句体，则没有设置该属性的地方了  */
 		factory.setNamespaceAware(namespaceAware);
 
 		if (validationMode != XmlValidationModeDetector.VALIDATION_NONE) {
@@ -97,6 +98,7 @@ public class DefaultDocumentLoader implements DocumentLoader {
 				// Enforce namespace aware for XSD...
 				factory.setNamespaceAware(true);
 				try {
+					/** 设置以XSD格式解析xml文件  */
 					factory.setAttribute(SCHEMA_LANGUAGE_ATTRIBUTE, XSD_SCHEMA_LANGUAGE);
 				}
 				catch (IllegalArgumentException ex) {

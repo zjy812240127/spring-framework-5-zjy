@@ -81,7 +81,7 @@ public class DelegatingEntityResolver implements EntityResolver {
 	@Nullable
 	public InputSource resolveEntity(@Nullable String publicId, @Nullable String systemId)
 			throws SAXException, IOException {
-
+		/** systemId存储所有的命名空间，找到所有命名空间指向的xsd文件，便于解析对应xsd标签下的bean */
 		if (systemId != null) {
 			if (systemId.endsWith(DTD_SUFFIX)) {
 				return this.dtdResolver.resolveEntity(publicId, systemId);

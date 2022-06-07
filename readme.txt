@@ -1,0 +1,10 @@
+xml解析过程：
+BeanDefinitionParserDelegate中
+
+1）parseCustomElement方法获取xml文件中的命名空间，自定义的命名空间指向我们对应标签的xsd文件路径（也就是schemas文件中的key，解析schemas文件得到对应的value路径，也就是我们本地存放的自定义标签的.xsd文件）
+
+2）读取到我们本地的xsd文件后，解析handlers文件，根据key获取对应和标签的handler解析器类的包路径
+
+3）得到自定义标签的解析器类
+
+4）调用解析器类的init方法，以自定义标签为key，获取对应的value就是解析自定义标签对应的一个具体类以及每个标签属性对应的该类的属性和方法

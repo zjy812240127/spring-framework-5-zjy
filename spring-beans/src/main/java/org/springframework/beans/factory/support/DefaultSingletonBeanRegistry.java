@@ -136,6 +136,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 */
 	protected void addSingleton(String beanName, Object singletonObject) {
 		synchronized (this.singletonObjects) {
+			/**  初始化完成将完整bean对象放入一级缓存同时标记为已完成注册的单例对象，从三级和二级缓存中移除实例对象，无论该完整的bean对象是从三级还是二级缓存中得到的  */
 			this.singletonObjects.put(beanName, singletonObject);
 			this.singletonFactories.remove(beanName);
 			this.earlySingletonObjects.remove(beanName);
@@ -179,18 +180,25 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	@Nullable
 	protected Object getSingleton(String beanName, boolean allowEarlyReference) {
 		// Quick check for existing instance without full singleton lock
+		/** 三级缓存解决循环依赖，初始化的程度3 --》 1 （一级完成初始化，二级提前暴露，三级刚实例化还未暴露） */
 		Object singletonObject = this.singletonObjects.get(beanName);
+		/** bean正在当前上下文中创建，以上得到的为null */
 		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
+			/** 已经完成实例化并存在循环依赖的bean会先被放入二级缓存中，从中获取提前暴露的这个bean  */
 			singletonObject = this.earlySingletonObjects.get(beanName);
 			if (singletonObject == null && allowEarlyReference) {
 				synchronized (this.singletonObjects) {
 					// Consistent creation of early reference within full singleton lock
+					/** 先从一级缓存中拿（顶级缓存，里面所有bean均已经完成初始化）  */
 					singletonObject = this.singletonObjects.get(beanName);
 					if (singletonObject == null) {
+						/** 还未放入一级缓存，也就是本身还没有注入所有依赖的bean，还被存放在二级缓存或者三级缓存中，这里先从二级缓存中找  */
 						singletonObject = this.earlySingletonObjects.get(beanName);
 						if (singletonObject == null) {
+							/** 二级缓存中也没有，则先从singletonFactories（三级缓存）中得到包含该bean单例对象（未完成初始化）的一个单例工厂  */
 							ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
 							if (singletonFactory != null) {
+								/** 单例工厂执行doCreateBean方法得到该对象的实例化对象，三级缓存中移除该bean实例对象，并将其加入二级缓存提前暴露给其他依赖他的bean引用 */
 								singletonObject = singletonFactory.getObject();
 								this.earlySingletonObjects.put(beanName, singletonObject);
 								this.singletonFactories.remove(beanName);

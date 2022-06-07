@@ -113,6 +113,7 @@ public class PluggableSchemaResolver implements EntityResolver {
 		}
 
 		if (systemId != null) {
+			/** 获取命名空间对应的xsd文件  */
 			String resourceLocation = getSchemaMappings().get(systemId);
 			if (resourceLocation == null && systemId.startsWith("https:")) {
 				// Retrieve canonical http schema mapping even for https declaration

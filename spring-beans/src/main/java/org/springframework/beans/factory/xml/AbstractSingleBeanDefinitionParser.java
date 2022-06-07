@@ -16,6 +16,7 @@
 
 package org.springframework.beans.factory.xml;
 
+import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -65,6 +66,7 @@ public abstract class AbstractSingleBeanDefinitionParser extends AbstractBeanDef
 		if (parentName != null) {
 			builder.getRawBeanDefinition().setParentName(parentName);
 		}
+		// 调用自定义解析器，根据子类重写的getBeanClass方法获取解析该标签因该得到的对应类
 		Class<?> beanClass = getBeanClass(element);
 		if (beanClass != null) {
 			builder.getRawBeanDefinition().setBeanClass(beanClass);
@@ -85,6 +87,7 @@ public abstract class AbstractSingleBeanDefinitionParser extends AbstractBeanDef
 			// Default-lazy-init applies to custom bean definitions as well.
 			builder.setLazyInit(true);
 		}
+		// 调用子类重写的方法解析xml文件标签中的属性，将对应的值赋值到对象的属性上
 		doParse(element, parserContext, builder);
 		return builder.getBeanDefinition();
 	}

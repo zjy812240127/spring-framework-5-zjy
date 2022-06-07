@@ -94,25 +94,39 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 	 * @see org.springframework.beans.factory.FactoryBean#getObject()
 	 */
 	protected Object getObjectFromFactoryBean(FactoryBean<?> factory, String beanName, boolean shouldPostProcess) {
+		/**
+		 * 真正从工厂bean中获取bean的初始化完成后的对象，
+		 * 	并且执行一系列回调和后置处理器方法
+		 */
 		if (factory.isSingleton() && containsSingleton(beanName)) {
 			synchronized (getSingletonMutex()) {
+				/** 尝试从缓存中获取bean对象  */
 				Object object = this.factoryBeanObjectCache.get(beanName);
 				if (object == null) {
+					/** 真实调用工厂bean的方法获取bean对象  */
 					object = doGetObjectFromFactoryBean(factory, beanName);
 					// Only post-process and store if not put there already during getObject() call above
 					// (e.g. because of circular reference processing triggered by custom getBean calls)
+					/** 为了防止在执行以上工厂bean的getObject方法过程中其他线程将该bean对象同步保存到了缓存中，再次检查缓存中是否存在该bean对象 */
 					Object alreadyThere = this.factoryBeanObjectCache.get(beanName);
 					if (alreadyThere != null) {
+						/** 如果其他线程同步获取了该bean对象，则引用指向同一个对象，防止同时存在该bean的两个实例对象  */
 						object = alreadyThere;
 					}
 					else {
 						if (shouldPostProcess) {
+							/** 执行之前定义的后置处理器的方法  */
 							if (isSingletonCurrentlyInCreation(beanName)) {
 								// Temporarily return non-post-processed object, not storing it yet..
+								/** 如果当前bean对象被标记为正在创建中，则为了尽快提供给其他实例化的bean引用，暂时不执行后置处理，先暴露该bean对象  */
 								return object;
 							}
+							/** 创建单例对象前回调该方法，默认实现是将该bean对象标记为：正在创建中（回调方法，不是后置处理器的方法）  */
 							beforeSingletonCreation(beanName);
 							try {
+								/** 回调执行bean初始化后的后置处理器，比如这里可以对bean对象进行   自动代理 （后置处理器放啊）
+								 * 	可以最后检查并修改bean的属性
+								 * */
 								object = postProcessObjectFromFactoryBean(object, beanName);
 							}
 							catch (Throwable ex) {
@@ -120,10 +134,12 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 										"Post-processing of FactoryBean's singleton object failed", ex);
 							}
 							finally {
+								/** 创建完单例对象后回调该方法，默认实现是将bean对象标记为 创建完成状态 （回调方法，不是后置处理器的方法）  */
 								afterSingletonCreation(beanName);
 							}
 						}
 						if (containsSingleton(beanName)) {
+							/** 一级缓存中存在该bean对象，说明已经实例化完成，将该对象放入缓存中便于获取   */
 							this.factoryBeanObjectCache.put(beanName, object);
 						}
 					}
@@ -159,6 +175,7 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 			if (System.getSecurityManager() != null) {
 				AccessControlContext acc = getAccessControlContext();
 				try {
+					/** 调用子类实现的工厂bean的getObject方法来获取bean对象  */
 					object = AccessController.doPrivileged((PrivilegedExceptionAction<Object>) factory::getObject, acc);
 				}
 				catch (PrivilegedActionException pae) {

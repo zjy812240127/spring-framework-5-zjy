@@ -120,19 +120,24 @@ public class DefaultNamespaceHandlerResolver implements NamespaceHandlerResolver
 		if (handlerOrClassName == null) {
 			return null;
 		}
+		/** 对应的处理器类是属于NamespaceHandler类的，直接返回  */
 		else if (handlerOrClassName instanceof NamespaceHandler) {
 			return (NamespaceHandler) handlerOrClassName;
 		}
+		/** 否则这里解析的是自定义的命名空间，由用户自己提供对应的处理类来实现对应标签的解析工作 */
 		else {
 			String className = (String) handlerOrClassName;
 			try {
+				/** 反射获取自定义的handler类  */
 				Class<?> handlerClass = ClassUtils.forName(className, this.classLoader);
 				if (!NamespaceHandler.class.isAssignableFrom(handlerClass)) {
 					throw new FatalBeanException("Class [" + className + "] for namespace [" + namespaceUri +
 							"] does not implement the [" + NamespaceHandler.class.getName() + "] interface");
 				}
 				NamespaceHandler namespaceHandler = (NamespaceHandler) BeanUtils.instantiateClass(handlerClass);
+				/** 调用子类自己重写的init方法，从中获取到对应的标签对应的解析类对象  */
 				namespaceHandler.init();
+				/** 存储所有的命名空间解析处理类对象到map   */
 				handlerMappings.put(namespaceUri, namespaceHandler);
 				return namespaceHandler;
 			}

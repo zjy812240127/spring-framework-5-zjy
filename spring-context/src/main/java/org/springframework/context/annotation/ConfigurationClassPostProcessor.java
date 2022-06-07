@@ -229,6 +229,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		}
 		this.registriesPostProcessed.add(registryId);
 
+		/** 一个类如果被@Configuration注释，这里会进行解析其所有的注解想要表示的信息（导入的类，注解的属性等。。。。。），并注入spring容器  */
 		processConfigBeanDefinitions(registry);
 	}
 
@@ -259,9 +260,11 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 	 * {@link Configuration} classes.
 	 */
 	public void processConfigBeanDefinitions(BeanDefinitionRegistry registry) {
+		/** 被注解修饰，需要解析注解信息的类的集合  */
 		List<BeanDefinitionHolder> configCandidates = new ArrayList<>();
 		String[] candidateNames = registry.getBeanDefinitionNames();
 
+		/** 遍历所有当前的bean定义，筛选出被注解修饰的bean定义信息  */
 		for (String beanName : candidateNames) {
 			BeanDefinition beanDef = registry.getBeanDefinition(beanName);
 			if (ConfigurationClassUtils.isFullConfigurationClass(beanDef) ||
@@ -312,6 +315,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		Set<BeanDefinitionHolder> candidates = new LinkedHashSet<>(configCandidates);
 		Set<ConfigurationClass> alreadyParsed = new HashSet<>(configCandidates.size());
 		do {
+			/** 解析注解类 */
 			parser.parse(candidates);
 			parser.validate();
 
